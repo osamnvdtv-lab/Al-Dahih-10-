@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📚 مكتبة الطالب – الدحيح</title>
+<style>
+body{font-family:'Tajawal',Arial;background:#eef2ff;margin:0;text-align:center}
+header{background:linear-gradient(90deg,#4f46e5,#6b21a8,#ec4899);color:#fff;padding:20px}
+.container{max-width:800px;margin:20px auto;background:#fff;padding:20px;border-radius:16px}
+select,button{width:100%;padding:10px;margin:6px 0;border-radius:10px;border:1px solid #ccc;font-size:16px}
+button{background:#4f46e5;color:#fff;border:none;font-weight:bold;cursor:pointer}
+button:hover{opacity:0.9}
+.item{background:#f3f4f6;padding:10px;border-radius:10px;margin:8px;display:flex;align-items:center;justify-content:space-between}
+.item img{width:80px;height:100px;margin-left:10px;border-radius:6px}
+.hidden{display:none}
+</style>
+</head>
+<body>
+
+<header>
+  🇪🇬 تحيا مصر | 📚 الدحيح
+</header>
+
+<div class="container">
+
+  <!-- كلمة السر -->
+  <div id="loginDiv">
+    <h3>🔐 دخول الطالب</h3>
+    <input id="studentPass" type="password" placeholder="كلمة السر">
+    <button onclick="loginStudent()">دخول</button>
+  </div>
+
+  <!-- اختيار المرحلة -->
+  <div id="stageDiv" class="hidden">
+    <h3>اختر المرحلة والصف</h3>
+    <select id="stageSelect">
+      <option value="primary">ابتدائي</option>
+      <option value="prep">إعدادي</option>
+      <option value="sec">ثانوي</option>
+    </select>
+    <select id="gradeSelect">
+      <option value="1">الصف 1</option>
+      <option value="2">الصف 2</option>
+      <option value="3">الصف 3</option>
+      <option value="4">الصف 4</option>
+      <option value="5">الصف 5</option>
+      <option value="6">الصف 6</option>
+    </select>
+    <button onclick="showContent()">عرض المحتوى</button>
+  </div>
+
+  <!-- أزرار المحتوى -->
+  <div id="buttonsDiv" class="hidden">
+    <button onclick="showBooks()">📚 الكتب</button>
+    <button onclick="showReviews()">📝 المراجعات</button>
+    <button onclick="showVideos()">🎥 الفيديوهات</button>
+    <button onclick="showNews()">📰 آخر الأخبار</button>
+    <br><br>
+    <a href="https://t.me/osmAn5788" target="_blank"><button>🔗 جروب التليجرام</button></a>
+  </div>
+
+  <!-- المحتوى -->
+  <div id="content"></div>
+
+</div>
+
+<script src="books.js"></script> <!-- الملف اللي فيه booksData -->
+<script src="reviews.js"></script> <!-- الملف اللي فيه reviewsData -->
+<script src="videos.js"></script> <!-- الملف اللي فيه videosData -->
+<script src="news.js"></script> <!-- الملف اللي فيه newsData -->
+
+<script>
+const STUDENT_PASSWORD = "Z2P15280615843599";
+
+let selectedStage = "";
+let selectedGrade = "";
+
+// ===== دخول =====
+function loginStudent(){
+  const pass = document.getElementById("studentPass").value.trim();
+  if(pass !== STUDENT_PASSWORD){
+    alert("❌ كلمة السر غير صحيحة");
+    return;
+  }
+  document.getElementById("loginDiv").classList.add("hidden");
+  document.getElementById("stageDiv").classList.remove("hidden");
+}
+
+// ===== بعد اختيار الصف =====
+function showContent(){
+  selectedStage = document.getElementById("stageSelect").value;
+  selectedGrade = document.getElementById("gradeSelect").value;
+  document.getElementById("stageDiv").classList.add("hidden");
+  document.getElementById("buttonsDiv").classList.remove("hidden");
+  showBooks(); // عرض الكتب مباشرة
+}
+
+// ===== عرض الكتب =====
+function showBooks(){
+  const content = document.getElementById("content");
+  content.innerHTML = "<h2>📚 الكتب</h2>";
+  const key = selectedStage + "_" + selectedGrade;
+  if(booksData[key]){
+    booksData[key].forEach(b=>{
+      content.innerHTML += `
+      <div class="item">
+        <img src="${b.img}" alt="${b.name}">
+        <div>
+          <b>${b.name}</b><br>
+          <a href="${b.link}" target="_blank">📥 فتح الكتاب</a>
+        </div>
+      </div>`;
+    });
+  } else content.innerHTML += "<p>لا توجد كتب لهذه المرحلة</p>";
+}
+
+// ===== المراجعات =====
+function showReviews(){
+  const content = document.getElementById("content");
+  content.innerHTML = "<h2>📝 المراجعات</h2>";
+  const key = selectedStage + "_" + selectedGrade;
+  if(reviewsData[key]){
+    reviewsData[key].forEach(r=>{
+      content.innerHTML += `<div class="item">${r}</div>`;
+    });
+  } else content.innerHTML += "<p>لا توجد مراجعات لهذه المرحلة</p>";
+}
+
+// ===== الفيديوهات =====
+function showVideos(){
+  const content = document.getElementById("content");
+  content.innerHTML = "<h2>🎥 الفيديوهات</h2>";
+  const key = selectedStage + "_" + selectedGrade;
+  if(videosData[key]){
+    videosData[key].forEach(v=>{
+      content.innerHTML += `<div class="item"><a href="${v}" target="_blank">${v}</a></div>`;
+    });
+  } else content.innerHTML += "<p>لا توجد فيديوهات لهذه المرحلة</p>";
+}
+
+// ===== الأخبار =====
+function showNews(){
+  const content = document.getElementById("content");
+  content.innerHTML = "<h2>📰 آخر الأخبار</h2>";
+  const key = selectedStage + "_" + selectedGrade;
+  if(newsData[key]){
+    newsData[key].forEach(n=>{
+      content.innerHTML += `<div class="item">${n}</div>`;
+    });
+  } else content.innerHTML += "<p>لا توجد أخبار لهذه المرحلة</p>";
+}
+</script>
+
+</body>
+</html>
